@@ -17,7 +17,7 @@ from keri.vdr import verifying, credentialing
 def test_proving(mockHelpingNowIso8601):
     sidSalt = coring.Salter(raw=b'0123456789abcdef').qb64
 
-    with habbing.openHby(name="sid", base="test", salt=sidSalt) as sidHby:
+    with habbing.openHby(salt=sidSalt, name="sid", base="test") as sidHby:
         sidHab = sidHby.makeHab(name="test", )
         assert sidHab.pre == 'EIaGMMWJFPmtXznY1IIiKDIrg-vIyge6mBl2QV8dDjI3'
         sed = dict()
@@ -251,7 +251,7 @@ def test_privacy_preserving_credential(mockHelpingNowIso8601):
 
 
 def test_credential_parsator():
-    with habbing.openHab(name="sid", temp=True, salt=b'0123456789abcdef') as (hby, hab):
+    with habbing.openHab(salt=b'0123456789abcdef', name="sid", temp=True) as (hby, hab):
         assert hab.pre == 'EKC8085pwSwzLwUGzh-HrEoFDwZnCJq27bVp5atdMT9o'
 
         regery = credentialing.Regery(hby=hby, name="sid", temp=True)

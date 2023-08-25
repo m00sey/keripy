@@ -157,7 +157,7 @@ def test_multisig_identifier_ends(seeder):
     salt = coring.Salter(raw=b'wann-the-witness').qb64
     with habbing.openHab(name="multisig1", temp=True, wits=[wanPre]) as (hby1, hab1), \
             habbing.openHab(name="multisig2", temp=True, wits=[wanPre]) as (hby2, hab2), \
-            habbing.openHby(name="wan", salt=salt, temp=True) as wanHby:
+            habbing.openHby(salt=salt, name="wan", temp=True) as wanHby:
         testDoer = RunTestDoer(wanHby, hby1, hab1, hby2, hab2, seeder)
 
         # Neuter this test for now, it will be moved to KERIA

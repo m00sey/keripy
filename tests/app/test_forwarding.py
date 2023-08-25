@@ -15,7 +15,7 @@ from keri.peer import exchanging
 
 def test_postman(seeder):
     with habbing.openHab(name="test", transferable=True, temp=True) as (hby, hab), \
-            habbing.openHby(name="wes", salt=coring.Salter(raw=b'wess-the-witness').qb64, temp=True) as wesHby, \
+            habbing.openHby(salt=coring.Salter(raw=b'wess-the-witness').qb64, name="wes", temp=True) as wesHby, \
             habbing.openHby(name="repTest", temp=True) as recpHby:
 
         mbx = storing.Mailboxer(name="wes", temp=True)

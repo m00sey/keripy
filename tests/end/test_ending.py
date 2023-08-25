@@ -408,7 +408,7 @@ def test_get_oobi():
     name = 'oobi'
     base = 'test'
     salt = coring.Salter(raw=b'0123456789abcdef').qb64
-    with habbing.openHby(name=name, base=base, salt=salt) as hby:
+    with habbing.openHby(salt=salt, name=name, base=base) as hby:
         hab = hby.makeHab(name=name)
         msgs = bytearray()
         msgs.extend(hab.makeEndRole(eid=hab.pre,

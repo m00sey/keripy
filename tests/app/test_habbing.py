@@ -613,11 +613,11 @@ def test_habery_reconfigure(mockHelpingNowUTC):
     pname = "nel"  # peer name
     pbase = "head"  # peer base shared
 
-    with (habbing.openHby(name='wes', base=cbase, salt=salt) as wesHby,
-          habbing.openHby(name='wok', base=cbase, salt=salt) as wokHby,
-          habbing.openHby(name=cname, base=cbase, salt=salt) as tamHby,
-          habbing.openHby(name='wat', base=cbase, salt=salt) as watHby,
-          habbing.openHby(name=pname, base=pbase, salt=salt) as nelHby):
+    with (habbing.openHby(salt=salt, name='wes', base=cbase) as wesHby,
+          habbing.openHby(salt=salt, name='wok', base=cbase) as wokHby,
+          habbing.openHby(salt=salt, name=cname, base=cbase) as tamHby,
+          habbing.openHby(salt=salt, name='wat', base=cbase) as watHby,
+          habbing.openHby(salt=salt, name=pname, base=pbase) as nelHby):
         # witnesses first so can setup inception event for tam
         wsith = '1'
 
@@ -871,7 +871,7 @@ def test_hab_by_pre():
 
 def test_postman_endsfor():
     with habbing.openHby(name="test", temp=True) as hby, \
-            habbing.openHby(name="wes", salt=coring.Salter(raw=b'wess-the-witness').qb64, temp=True) as wesHby, \
+            habbing.openHby(salt=coring.Salter(raw=b'wess-the-witness').qb64, name="wes", temp=True) as wesHby, \
             habbing.openHab(name="agent", temp=True) as (agentHby, agentHab):
 
         print()

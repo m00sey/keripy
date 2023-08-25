@@ -25,8 +25,8 @@ def test_issuing(seeder, mockCoringRandomNonce, mockHelpingNowIso8601):
     assert wanSalt == '0AB3YW5uLXRoZS13aXRuZXNz'
 
     with (habbing.openHby(name="red", base="test") as redHby,
-          habbing.openHby(name="sid", base="test", salt=sidSalt) as sidHby,
-          habbing.openHby(name="wan", base="test", salt=wanSalt) as wanHby):
+          habbing.openHby(salt=sidSalt, name="sid", base="test") as sidHby,
+          habbing.openHby(salt=wanSalt, name="wan", base="test") as wanHby):
 
 
         # setup wan's Hab and doers
@@ -152,9 +152,9 @@ def test_proving(seeder, mockCoringRandomNonce, mockHelpingNowIso8601):
     hanSalt = coring.Salter(raw=b'abcdef0123456789').qb64
     vicSalt = coring.Salter(raw=b'fedcba9876543210').qb64
 
-    with habbing.openHby(name="han", base="test", salt=hanSalt) as hanHby, \
-            habbing.openHby(name="sid", base="test", salt=sidSalt) as sidHby, \
-            habbing.openHby(name="vic", base="test", salt=vicSalt) as vicHby:
+    with habbing.openHby(salt=hanSalt, name="han", base="test") as hanHby, \
+            habbing.openHby(salt=sidSalt, name="sid", base="test") as sidHby, \
+            habbing.openHby(salt=vicSalt, name="vic", base="test") as vicHby:
         limit = 1.0
         tock = 1.0
         doist = doing.Doist(limit=limit, tock=tock)

@@ -21,7 +21,7 @@ def test_pathed_material(mockHelpingNowUTC):
         def __init__(self):
             self.msgs = decking.Deck()
 
-    with (habbing.openHby(name="pal", salt=coring.Salter(raw=b'0123456789abcdef').qb64) as hby,
+    with (habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64, name="pal") as hby,
           habbing.openHby(name="deb", base="test") as debHby):
         sith = ["1/2", "1/2", "1/2"]  # weighted signing threshold
         palHab = hby.makeHab(name="pal")

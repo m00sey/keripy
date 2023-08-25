@@ -18,7 +18,7 @@ def test_remote_salty_hab():
     salter = coring.Salter(raw=raw, tier=tier)
 
     with habbing.openHby(name="remoteSalty") as remote, \
-            habbing.openHby(name="local", salt=salter.qb64, temp=True, tier=tier) as local:
+            habbing.openHby(salt=salter.qb64, name="local", temp=True, tier=tier) as local:
         # create a single Local Hab and compare the results with the Signify Hab
 
         creator = SaltyCreator(salt=salter.qb64, stem="test", tier=tier)

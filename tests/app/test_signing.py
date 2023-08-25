@@ -15,8 +15,8 @@ from keri.vdr import verifying, credentialing
 
 
 def test_sad_signature(seeder, mockCoringRandomNonce, mockHelpingNowIso8601):
-    with (habbing.openHab(name="sid", temp=True, salt=b'0123456789abcdef') as (sigHby, sidHab),
-          habbing.openHab(name="wan", temp=True, salt=b'0123456789abcdef', transferable=False) as (wanHby, wanHab)):
+    with (habbing.openHab(salt=b'0123456789abcdef', name="sid", temp=True) as (sigHby, sidHab),
+          habbing.openHab(salt=b'0123456789abcdef', name="wan", temp=True, transferable=False) as (wanHby, wanHab)):
         personal = dict(
             d="",
             n="Q8rNaKITBLLA96Euh5M5v4o3fRl1Bc54xdM-bOIHUjY",
@@ -127,7 +127,7 @@ def test_sad_signature(seeder, mockCoringRandomNonce, mockHelpingNowIso8601):
 
     # Test multisig identifier
     with configing.openCF(name="mel", base="mel", temp=True) as cf, \
-            habbing.openHby(name="mel", temp=True, salt=coring.Salter(raw=b'0123456789abcdef').qb64b,
+            habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64b, name="mel", temp=True,
                             base="mel", cf=cf) as hby:
         hab = hby.makeHab(name="mel", icount=3, isith='3', ncount=3, nsith='3')
         seeder.seedSchema(hby.db)
@@ -199,7 +199,7 @@ def test_signature_transposition(seeder, mockCoringRandomNonce, mockHelpingNowIs
         LEI="254900OPPU84GM83MG36"
     )
 
-    with habbing.openHab(name="sid", temp=True, salt=b'0123456789abcdef') as (hby, hab):
+    with habbing.openHab(salt=b'0123456789abcdef', name="sid", temp=True) as (hby, hab):
         seeder.seedSchema(db=hby.db)
         regery = credentialing.Regery(hby=hby, name=hab.name, temp=True)
         verifier = verifying.Verifier(hby=hby, reger=regery.reger)
@@ -295,7 +295,7 @@ def test_signature_transposition(seeder, mockCoringRandomNonce, mockHelpingNowIs
         assert saider is not None
 
     # multiple path sigs
-    with habbing.openHab(name="sid", temp=True, salt=b'0123456789abcdef') as (hby, hab):
+    with habbing.openHab(salt=b'0123456789abcdef', name="sid", temp=True) as (hby, hab):
         seeder.seedSchema(db=hby.db)
         regery = credentialing.Regery(hby=hby, name=hab.name, temp=True)
         verifier = verifying.Verifier(hby=hby, reger=regery.reger)
@@ -385,7 +385,7 @@ def test_signature_transposition(seeder, mockCoringRandomNonce, mockHelpingNowIs
                        b'vYgHJ7LDsiQRD-Roj5bGfJXj6PAo5TS36t4kWmiBhpvqLgb2l9vUhpiUK')
 
     # signing SAD with non-transferable identifier
-    with habbing.openHab(name="wan", temp=True, salt=b'0123456789abcdef', transferable=False) as (hby, hab):
+    with habbing.openHab(salt=b'0123456789abcdef', name="wan", temp=True, transferable=False) as (hby, hab):
         seeder.seedSchema(db=hby.db)
         cred = proving.credential(schema="EMQWEcCnVRk1hatTNyK3sIykYSrrFvafX3bHQ9Gkk1kC",
                                   issuer=hab.pre, data=d, source={},
@@ -421,7 +421,7 @@ def test_signatory():
     salt = coring.Salter(raw=b'0123456789abcdef')  # init sig Salter
 
     with basing.openDB(name="sig") as db, keeping.openKS(name="sig") as ks, \
-            habbing.openHab(name="sig", salt=salt.raw) as (sigHby, sigHab):
+            habbing.openHab(salt=salt.raw, name="sig") as (sigHby, sigHab):
         # Init signatory
         signer = sigHby.signator
 

@@ -23,16 +23,14 @@ from ..kering import MissingSignatureError, Roles
 
 logger = help.ogler.getLogger()
 
-SALT = coring.Salter(raw=b'0123456789abcdef').qb64  # '0AAwMTIzNDU2Nzg5YWJjZGVm'
-
-
 @contextmanager
-def openHby(*, name="test", base="", temp=True, salt=SALT, **kwa):
+def openHby(*, salt, name="test", base="", temp=True, **kwa):
     """
     Context manager wrapper for Habery instance.
     Context 'with' statements call .close on exit of 'with' block
 
     Parameters:
+        salt (str): qb64 salt for creating key pairs
         name (str): name of habery and shared db and file path
         base (str): optional if "" path component of shared db and files.
         temp (bool): True means use temporary or limited resources testing.
@@ -40,7 +38,6 @@ def openHby(*, name="test", base="", temp=True, salt=SALT, **kwa):
             Use quick method to stretch salts for seeds such as
                 bran salt to seed or key creation of Habs.
                 Otherwise use more resources set by tier to stretch
-        salt (str): qb64 salt for creating key pairs
 
     Parameters: Passed through via kwa
         ks (Keeper):  keystore lmdb subclass instance
@@ -82,17 +79,17 @@ def openHby(*, name="test", base="", temp=True, salt=SALT, **kwa):
 
 
 @contextmanager
-def openHab(name="test", base="", salt=b'0123456789abcdef', temp=True, cf=None, **kwa):
+def openHab(salt, name="test", base="", temp=True, cf=None, **kwa):
     """
     Context manager wrapper for Hab instance.
     Defaults to temporary resources
     Context 'with' statements call .close on exit of 'with' block
 
     Parameters:
+        salt(bytes): passed to habitat to use for inception raw salt not qb64
         name(str): name of habitat to create
         base(str): the name used for shared resources i.e. Baser and Keeper The habitat specific config file will be
         in base/name
-        salt(bytes): passed to habitat to use for inception raw salt not qb64
         temp(bool): indicates if this uses temporary databases
         cf(Configer): optional configer for loading configuration data
 
@@ -100,7 +97,7 @@ def openHab(name="test", base="", salt=b'0123456789abcdef', temp=True, cf=None, 
 
     salt = coring.Salter(raw=salt).qb64
 
-    with openHby(name=name, base=base, salt=salt, temp=temp, cf=cf) as hby:
+    with openHby(salt=salt, name=name, base=base, temp=temp, cf=cf) as hby:
         if (hab := hby.habByName(name)) is None:
             hab = hby.makeHab(name=name, icount=1, isith='1', ncount=1, nsith='1', **kwa)
 
@@ -144,12 +141,13 @@ class Habery:
 
     """
 
-    def __init__(self, *, name='test', base="", temp=False,
+    def __init__(self, salt, *, name='test', base="", temp=False,
                  ks=None, db=None, cf=None, clear=False, headDirPath=None, **kwa):
         """
         Initialize instance.
 
         Parameters:
+            salt (str): qb64 salt for creating key pairs
             name (str): alias name for shared environment config databases etc.
             base (str): optional directory path segment inserted before name
                 that allows further differentiation with a hierarchy. "" means
@@ -191,7 +189,6 @@ class Habery:
             pidx (int): Initial prefix index for vacuous ks
             algo (str): algorithm (randy or salty) for creating key pairs
                 default is root algo which defaults to salty
-            salt (str): qb64 salt for creating key pairs
             tier (str): security tier for generating keys from salt (Tierage)
             free (boo): free resources by closing on Doer exit if any
             temp (bool): See above

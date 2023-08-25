@@ -35,7 +35,7 @@ def test_verifier_query(mockHelpingNowUTC, mockCoringRandomNonce):
 
 
 def test_verifier(seeder):
-    with (habbing.openHab(name="sid", temp=True, salt=b'0123456789abcdef') as (hby, hab),
+    with (habbing.openHab(salt=b'0123456789abcdef', name="sid", temp=True) as (hby, hab),
             habbing.openHab(name="recp", transferable=True, temp=True) as (recpHby, recp)):
         seeder.seedSchema(db=hby.db)
         seeder.seedSchema(db=recpHby.db)
@@ -297,8 +297,8 @@ def test_verifier_chained_credential(seeder):
     vLeiSchema = "ED892b40P_GcESs3wOcc2zFvL_GVi2Ybzp9isNTZKqP0"
     optionalIssueeSchema = "EAv8omZ-o3Pk45h72_WnIpt6LTWNzc8hmLjeblpxB9vz"
 
-    with habbing.openHab(name="ron", temp=True, salt=b'0123456789abcdef') as (ronHby, ron), \
-            habbing.openHab(name="ian", temp=True, salt=b'0123456789abcdef') as (ianHby, ian), \
+    with habbing.openHab(salt=b'0123456789abcdef', name="ron", temp=True) as (ronHby, ron), \
+            habbing.openHab(salt=b'0123456789abcdef', name="ian", temp=True) as (ianHby, ian), \
             habbing.openHab(name="han", transferable=True, temp=True) as (hanHby, han), \
             habbing.openHab(name="vic", transferable=True, temp=True) as (vicHby, vic):
         seeder.seedSchema(db=ronHby.db)

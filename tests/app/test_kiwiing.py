@@ -401,8 +401,8 @@ def test_identifier_ends():
 
 
 def test_oobi_ends(seeder):
-    with habbing.openHby(name="wes", salt=coring.Salter(raw=b'wess-the-witness').qb64) as wesHby, \
-            habbing.openHby(name="pal", salt=coring.Salter(raw=b'0123456789abcdef').qb64) as palHby:
+    with habbing.openHby(salt=coring.Salter(raw=b'wess-the-witness').qb64, name="wes") as wesHby, \
+            habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64, name="pal") as palHby:
         wesHab = wesHby.makeHab(name="wes", transferable=False)
 
         palHab = palHby.makeHab(name="pal", icount=1, ncount=1, wits=[wesHab.pre])
@@ -510,8 +510,8 @@ def test_oobi_ends(seeder):
 
 
 def test_contact_ends(seeder):
-    with habbing.openHby(name="pal", salt=coring.Salter(raw=b'0123456789abcdef').qb64) as palHby, \
-            habbing.openHby(name="ken", salt=coring.Salter(raw=b'0123456789ghijkl').qb64) as kenHby:
+    with habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64, name="pal") as palHby, \
+            habbing.openHby(salt=coring.Salter(raw=b'0123456789ghijkl').qb64, name="ken") as kenHby:
 
         palHab = palHby.makeHab(name="pal", icount=1, ncount=1, wits=[])
         kvy = eventing.Kevery(db=palHab.db, local=False, lax=True)
@@ -789,7 +789,7 @@ def test_keystate_end():
 
 
 def test_schema_ends():
-    with habbing.openHby(name="test", salt=coring.Salter(raw=b'0123456789abcdef').qb64) as hby:
+    with habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64, name="test") as hby:
         app = falcon.App()
         notifier = notifying.Notifier(hby=hby)
         regery = credentialing.Regery(hby=hby, name="test", temp=True)
@@ -1014,7 +1014,7 @@ def test_escrow_end(mockHelpingNowUTC):
 
 def test_aied_ends():
     bran = "1B88Kq7afAZHlxsNIBE5y"
-    with habbing.openHby(name="test", salt=coring.Salter(raw=b'0123456789abcdef').qb64, bran=bran) as hby:
+    with habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64, name="test", bran=bran) as hby:
         app = falcon.App()
         notifier = notifying.Notifier(hby=hby)
         regery = credentialing.Regery(hby=hby, name="test", temp=True)

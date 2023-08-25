@@ -44,7 +44,7 @@ def test_nesting():
 
 
 def test_exchanger():
-    with habbing.openHab(name="sid", base="test", salt=b'0123456789abcdef') as (hby, hab):
+    with habbing.openHab(salt=b'0123456789abcdef', name="sid", base="test") as (hby, hab):
         mbx = storing.Mailboxer(hby=hby)
         forwarder = forwarding.ForwardHandler(hby=hby, mbx=mbx)
         exc = exchanging.Exchanger(db=hby.db, handlers=[forwarder])

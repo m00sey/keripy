@@ -14,7 +14,7 @@ from keri.vdr import verifying, credentialing
 def test_wallet(seeder, mockCoringRandomNonce, mockHelpingNowIso8601):
     sidSalt = coring.Salter(raw=b'0123456789abcdef').qb64
 
-    with habbing.openHby(name="sid", base="test", salt=sidSalt) as sidHby:
+    with habbing.openHby(salt=sidSalt, name="sid", base="test") as sidHby:
         sidHab = sidHby.makeHab(name="test")
         seeder.seedSchema(db=sidHby.db)
         assert sidHab.pre == "EIaGMMWJFPmtXznY1IIiKDIrg-vIyge6mBl2QV8dDjI3"

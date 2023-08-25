@@ -62,9 +62,9 @@ def test_keystate(mockHelpingNowUTC):
     # Bam is verifying the key state for Bob from Wes
 
     # defualt for openHby temp = True
-    with (habbing.openHby(name="bob", base="test") as bobHby,
-         habbing.openHby(name="bam", base="test") as bamHby,
-         habbing.openHby(name="wes", base="test", salt=salt) as wesHby):
+    with (habbing.openHby(salt=salt, name="bob", base="test") as bobHby,
+         habbing.openHby(salt=salt, name="bam", base="test") as bamHby,
+         habbing.openHby(salt=salt, name="wes", base="test") as wesHby):
 
         # setup Wes's habitat nontrans
         wesHab = wesHby.makeHab(name="wes", isith='1', icount=1, transferable=False,)

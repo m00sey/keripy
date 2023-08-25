@@ -17,9 +17,9 @@ from keri.peer import exchanging
 def test_counselor():
     salt = b'0123456789abcdef'
     prefix = "counselor"
-    with habbing.openHab(name=f"{prefix}_1", salt=salt, transferable=True) as (hby1, hab1), \
-            habbing.openHab(name=f"{prefix}_2", salt=salt, transferable=True) as (hby2, hab2), \
-            habbing.openHab(name=f"{prefix}_3", salt=salt, transferable=True) as (hby3, hab3):
+    with habbing.openHab(salt=salt, name=f"{prefix}_1", transferable=True) as (hby1, hab1), \
+            habbing.openHab(salt=salt, name=f"{prefix}_2", transferable=True) as (hby2, hab2), \
+            habbing.openHab(salt=salt, name=f"{prefix}_3", transferable=True) as (hby3, hab3):
         counselor = grouping.Counselor(hby=hby1)
 
         # Keverys so we can process each other's inception messages.
@@ -246,13 +246,13 @@ def test_counselor():
 def test_the_seven():
     salt = b'0123456789abcdef'
     prefix = "counselor"
-    with habbing.openHab(name=f"{prefix}_1", salt=salt, transferable=True) as (hby1, hab1), \
-            habbing.openHab(name=f"{prefix}_2", salt=salt, transferable=True) as (hby2, hab2), \
-            habbing.openHab(name=f"{prefix}_3", salt=salt, transferable=True) as (hby3, hab3), \
-            habbing.openHab(name=f"{prefix}_4", salt=salt, transferable=True) as (hby4, hab4), \
-            habbing.openHab(name=f"{prefix}_5", salt=salt, transferable=True) as (hby5, hab5), \
-            habbing.openHab(name=f"{prefix}_6", salt=salt, transferable=True) as (hby6, hab6), \
-            habbing.openHab(name=f"{prefix}_7", salt=salt, transferable=True) as (hby7, hab7):
+    with habbing.openHab(salt=salt, name=f"{prefix}_1", transferable=True) as (hby1, hab1), \
+            habbing.openHab(salt=salt, name=f"{prefix}_2", transferable=True) as (hby2, hab2), \
+            habbing.openHab(salt=salt, name=f"{prefix}_3", transferable=True) as (hby3, hab3), \
+            habbing.openHab(salt=salt, name=f"{prefix}_4", transferable=True) as (hby4, hab4), \
+            habbing.openHab(salt=salt, name=f"{prefix}_5", transferable=True) as (hby5, hab5), \
+            habbing.openHab(salt=salt, name=f"{prefix}_6", transferable=True) as (hby6, hab6), \
+            habbing.openHab(salt=salt, name=f"{prefix}_7", transferable=True) as (hby7, hab7):
         counselor = grouping.Counselor(hby=hby1)
 
         # All the Habs, this will come in handy later
@@ -587,9 +587,9 @@ def test_the_seven():
 
 @contextmanager
 def openMultiSig(prefix="test", salt=b'0123456789abcdef', temp=True, **kwa):
-    with habbing.openHab(name=f"{prefix}_1", salt=salt, transferable=True, temp=temp) as (hby1, hab1), \
-            habbing.openHab(name=f"{prefix}_2", salt=salt, transferable=True, temp=temp) as (hby2, hab2), \
-            habbing.openHab(name=f"{prefix}_3", salt=salt, transferable=True, temp=temp) as (hby3, hab3):
+    with habbing.openHab(salt=salt, name=f"{prefix}_1", transferable=True, temp=temp) as (hby1, hab1), \
+            habbing.openHab(salt=salt, name=f"{prefix}_2", transferable=True, temp=temp) as (hby2, hab2), \
+            habbing.openHab(salt=salt, name=f"{prefix}_3", transferable=True, temp=temp) as (hby3, hab3):
         # Keverys so we can process each other's inception messages.
         kev1 = eventing.Kevery(db=hab1.db, lax=True, local=False)
         kev2 = eventing.Kevery(db=hab2.db, lax=True, local=False)

@@ -14,9 +14,9 @@ from keri.peer import exchanging
 
 
 def test_boatswain(seeder):
-    with habbing.openHby(name="wes", salt=coring.Salter(raw=b'wess-the-witness').qb64) as wesHby, \
-            habbing.openHby(name="pal", salt=coring.Salter(raw=b'0123456789abcdef').qb64) as palHby, \
-            habbing.openHby(name="del", salt=coring.Salter(raw=b'0123456789ghijkl').qb64) as delHby:
+    with habbing.openHby(salt=coring.Salter(raw=b'wess-the-witness').qb64, name="wes") as wesHby, \
+            habbing.openHby(salt=coring.Salter(raw=b'0123456789abcdef').qb64, name="pal") as palHby, \
+            habbing.openHby(salt=coring.Salter(raw=b'0123456789ghijkl').qb64, name="del") as delHby:
 
         wesDoers = indirecting.setupWitness(alias="wes", hby=wesHby, tcpPort=5634, httpPort=5644)
         witDoer = agenting.Receiptor(hby=palHby)

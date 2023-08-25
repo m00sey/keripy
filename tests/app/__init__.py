@@ -10,10 +10,10 @@ from keri.db import dbing
 
 
 @contextmanager
-def openMultiSig(prefix="test", salt=b'0123456789abcdef', temp=True, **kwa):
-    with (habbing.openHab(name=f"{prefix}_1", salt=salt, transferable=True, temp=temp) as (hby1, hab1),
-          habbing.openHab(name=f"{prefix}_2", salt=salt, transferable=True, temp=temp) as (hby2, hab2),
-          habbing.openHab(name=f"{prefix}_3", salt=salt, transferable=True, temp=temp) as (hby3, hab3)):
+def openMultiSig(salt, prefix="test", temp=True, **kwa):
+    with (habbing.openHab(salt=salt, name=f"{prefix}_1", transferable=True, temp=temp) as (hby1, hab1),
+          habbing.openHab(salt=salt, name=f"{prefix}_2", transferable=True, temp=temp) as (hby2, hab2),
+          habbing.openHab(salt=salt, name=f"{prefix}_3", transferable=True, temp=temp) as (hby3, hab3)):
         # Keverys so we can process each other's inception messages.
         kev1 = eventing.Kevery(db=hab1.db, lax=True, local=False)
         kev2 = eventing.Kevery(db=hab2.db, lax=True, local=False)
