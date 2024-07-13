@@ -3784,6 +3784,7 @@ class Kevery:
         accepted = self.rvy.acceptReply(serder=serder, saider=saider, route=route,
                                         aid=aid, osaider=osaider, cigars=cigars,
                                         tsgs=tsgs)
+        print("not accepted")
         if not accepted:
             raise UnverifiedReplyError(f"Unverified end role reply. {serder.ked}")
 

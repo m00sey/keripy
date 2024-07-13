@@ -258,7 +258,8 @@ class Revery:
         odater = None
         if osaider:
             odater = self.db.sdts.get(keys=osaider.qb64b)
-
+        print("ddddd")
+        print("cigars", cigars)
         for cigar in cigars:  # process each couple to verify sig and write to db
             if cigar.verfer.transferable:  # ignore invalid transferable verfers
                 continue  # skip invalid transferable
@@ -288,11 +289,13 @@ class Revery:
                 continue  # skip if cig not verify
 
             # All constraints satisfied so update
+            print("cccc")
             self.updateReply(serder=serder, saider=saider, dater=dater, cigar=cigar)
             self.removeReply(saider=osaider)  # remove obsoleted reply artifacts
             accepted = True
             break  # first valid cigar sufficient ignore any duplicates in cigars
-
+        
+        print("tsgs", tsgs)
         for prefixer, seqner, ssaider, sigers in tsgs:  # iterate over each tsg
             if not self.lax and prefixer.qb64 in self.prefixes:  # own sig
                 if not self.local:  # own sig when not local so ignore
@@ -323,12 +326,14 @@ class Revery:
                                             "state sig datetime from %s on reply msg=\n%s\n",
                                             aid, serder.pretty())
                                 continue  # skip if not later
-
+            print("eeeee")
             # retrieve sdig of last event at sn of signer.
             sdig = self.db.getKeLast(key=dbing.snKey(pre=spre, sn=seqner.sn))
+            print("sdig", sdig)
             if sdig is None:
                 # create cue here to request key state for sprefixer signer
                 # signer's est event not yet in signer's KEL
+                print("re escrow")
                 self.escrowReply(serder=serder, saider=saider, dater=dater,
                                  route=route, prefixer=prefixer, seqner=seqner,
                                  ssaider=ssaider, sigers=sigers)
@@ -340,10 +345,12 @@ class Revery:
             # assumes db ensures that sraw must not be none because sdig was in KE
             sserder = serdering.SerderKERI(raw=bytes(sraw))
             if sserder.said != ssaider.qb64:  # signer's dig not match est evt
+                print("bbbb")
                 raise kering.ValidationError(f"Bad trans indexed sig group at sn = "
                                              f"{seqner.sn} for reply = {serder.ked}.")
             # verify sigs
             if not (sverfers := sserder.verfers):
+                print("aaa")
                 raise kering.ValidationError(f"Invalid reply from signer={spre}, no "
                                              f"keys at signer's est. event sn={seqner.sn}.")
 
@@ -357,7 +364,7 @@ class Revery:
                                                   verfers=sverfers,
                                                   tholder=sserder.tholder)
             # no error so at least one verified siger
-
+            print("valid", valid)
             if valid:  # meet threshold so save
                 # All constraints satisfied so update
                 self.updateReply(serder=serder, saider=saider, dater=dater,
@@ -377,7 +384,7 @@ class Revery:
                 self.escrowReply(serder=serder, saider=saider, dater=dater,
                                  route=route, prefixer=prefixer, seqner=seqner,
                                  ssaider=ssaider, sigers=sigers)
-
+        print("accepted", accepted)
         return accepted
 
     def updateReply(self, *, serder, saider, dater, cigar=None, prefixer=None,
@@ -441,6 +448,7 @@ class Revery:
         """
         if not sigers:
             return  # nothing to escrow
+
         keys = (saider.qb64,)
         self.db.sdts.put(keys=keys, val=dater)  # first one idempotent
         self.db.rpys.put(keys=keys, val=serder)  # first one idempotent
@@ -459,6 +467,7 @@ class Revery:
         """
         for (route, ion), saider in self.db.rpes.getIoItemIter():
             try:
+                print(1)
                 tsgs = eventing.fetchTsgs(db=self.db.ssgs, saider=saider)
 
                 keys = (saider.qb64,)
@@ -468,19 +477,20 @@ class Revery:
                     if not (dater and serder and tsgs):
                         raise ValueError(f"Missing escrow artifacts at said={saider.qb64}"
                                          f"for route={route}.")
-
+                    print(7)
                     # do date math for stale escrow
                     if ((helping.nowUTC() - dater.datetime) >
                             datetime.timedelta(seconds=self.TimeoutRPE)):
                         # escrow stale so raise ValidationError which unescrows below
                         logger.info("Kevery unescrow error: Stale reply escrow "
                                     " at route = %s\n", route)
-
+                        print(8)
                         raise kering.ValidationError(f"Stale reply escrow at route = {route}.")
-
+                    print("processReply")
                     self.processReply(serder=serder, tsgs=tsgs)
 
                 except kering.UnverifiedReplyError as ex:
+                    print(9, ex)
                     # still waiting on missing prior event to validate
                     if logger.isEnabledFor(logging.DEBUG):
                         logger.exception("Kevery unescrow attempt failed: %s\n", ex.args[0])
@@ -489,13 +499,16 @@ class Revery:
 
                 except Exception as ex:  # other error so remove from reply escrow
                     self.db.rpes.rem(keys=(route, ), val=saider)  # remove escrow only
+                    print(10, ex)
                     self.removeReply(saider)  # remove escrow reply artifacts
+                    print(10)
                     if logger.isEnabledFor(logging.DEBUG):
                         logger.exception("Kevery unescrowed due to error: %s\n", ex.args[0])
                     else:
                         logger.error("Kevery unescrowed due to error: %s\n", ex.args[0])
 
                 else:  # unescrow succeded
+                    print(11)
                     self.db.rpes.rem(keys=(route, ), val=saider)  # remove escrow only
                     logger.info("Kevery unescrow succeeded for reply=\n%s\n",
                                 serder.pretty())

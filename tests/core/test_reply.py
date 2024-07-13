@@ -7,19 +7,14 @@ routes: /end/role and /loc/scheme
 
 """
 import os
-
 import pytest
 
-from hio.help.hicting import Mict
-
 from keri import kering
-
 from keri.core import eventing, parsing, routing
-from keri.core.coring import MtrDex, Salter
-
+from keri.core.coring import Dater, MtrDex, Prefixer, Saider, Salter, Seqner, Siger
+from keri.core.serdering import SerderKERI
 from keri.db import basing
-from keri.app import habbing, keeping
-
+from keri.app import habbing
 from keri import help
 
 logger = help.ogler.getLogger()
@@ -1278,6 +1273,40 @@ def test_reply(mockHelpingNowUTC):
     assert not os.path.exists(tamHby.ks.path)
     assert not os.path.exists(tamHby.db.path)
     """Done Test"""
+
+def test_reply_escrow(mockHelpingNowUTC):
+    raw = b'\x05\xaa\x8f-S\x9a\xe9\xfaU\x9c\x02\x9c\x9b\x08Hu'
+    salt =  Salter(raw=raw).qb64
+
+    with (habbing.openHby(name="tam", base="test", salt=salt) as tamHby):
+      
+      rtr = routing.Router()
+      rvy = routing.Revery(db=tamHby.db, rtr=rtr)
+      kvy = eventing.Kevery(db=tamHby.db, lax=False, local=True, rvy=rvy)
+      kvy.registerReplyRoutes(router=rtr)
+
+      serder = SerderKERI(raw=b'{"v":"KERI10JSON000111_","t":"rpy","d":"EKI3-Z9OYpYjEVrqbfg6dB1RqzbO10rnNkSN4eQ6Od94","dt":"2024-07-12T18:34:34.000000+00:00","r":"/end/role/add","a":{"cid":"EC61gZ9lCKmHAS7U5ehUfEbGId5rcY0D7MirFZHDQcE2","role":"agent","eid":"BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM"}}')
+      saider = Saider(qb64="EKI3-Z9OYpYjEVrqbfg6dB1RqzbO10rnNkSN4eQ6Od94")
+      dater = Dater(dts="2024-07-12T18:34:34.000000+00:00")
+      route = "/end/role/add"
+      prefixer = Prefixer(qb64="EC61gZ9lCKmHAS7U5ehUfEbGId5rcY0D7MirFZHDQcE2")
+      seqner = Seqner(raw=b'0AAAAAAAAAAAAAAAAAAAAAAB')
+      ssaider = Saider(qb64="EF44ObAAxi7AJ7CIxBVB1eCRIdIH_Y_Qemx9BeJTGoIb")
+      sigers = [Siger(qb64="BADecnHlCcvWSE1DhzQcTOhMdHCxQ7T5_T7t2qLtMx7HJNPkSF63YcKfl939wXalrtgfdATK_5RgInNjNOD1-0oH")]
+  
+      rvy.escrowReply(serder=serder, saider=saider, dater=dater, route=route, prefixer=prefixer, seqner=seqner, ssaider=ssaider, sigers=sigers)
+      
+      keys = (saider.qb64,)
+      assert rvy.db.sdts.get(keys=keys).dts == dater.dts
+      assert rvy.db.rpys.get(keys=keys).said == serder.said
+      assert rvy.db.rpes.get(keys=(route,))[0].qb64 == saider.qb64
+      quadkeys = (saider.qb64, prefixer.qb64, f"{seqner.sn:032x}", ssaider.qb64)
+      assert rvy.db.ssgs.get(keys=quadkeys)[0].qb64 == sigers[0].qb64
+
+      rvy.processEscrowReply()
+
+      print(rvy.db.rpys.get(keys=keys))
+      print(rvy.db.rpes.get(keys=(route,)))
 
 
 if __name__ == "__main__":
