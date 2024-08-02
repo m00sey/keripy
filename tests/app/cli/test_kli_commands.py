@@ -6,7 +6,7 @@ import pytest
 from keri.app import directing, habbing
 from keri.app.cli import commands
 from keri.app.cli.common import existing
-from keri.core import coring
+from keri.core import coring, serdering
 from keri.kering import ValidationError
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -291,5 +291,46 @@ def test_incept_and_rotate_opts(helpers, capsys):
     directing.runController(doers=doers)
 
 
+def test_nord_fix(helpers):
+    helpers.remove_test_dirs("nord")
+    assert os.path.isdir("/usr/local/var/keri/ks/nord") is False
 
+    parser = multicommand.create_parser(commands)
+    salt = coring.Salter(raw=b'0123456789abcdef').qb64
+    args = parser.parse_args(["init", "--name", "nord", "--nopasscode", "--salt", salt])
+    assert args.handler is not None
+    doers = args.handler(args)
 
+    directing.runController(doers=doers)
+
+    with existing.existingHby("nord") as hby:
+        assert os.path.isdir(hby.db.path) is True
+        raw = (b'{"v":"KERI10JSON0001c0_","t":"rpy","d":"EPMkaFdIE8BfaKMImFdC63ddKsrzGzg8UDsRwuneAOY_",'
+               b'"dt":"2024-08-02T16:31:14.978541+00:00",'
+               b'"r":"/tsn/registry/EExMBKFYhzVdkWhEW3RCdLiTjiUIeFP_FL4_u1hD18vh","a":{"vn":[1,0],'
+               b'"i":"EExMBKFYhzVdkWhEW3RCdLiTjiUIeFP_FL4_u1hD18vh","s":"0",'
+               b'"d":"EExMBKFYhzVdkWhEW3RCdLiTjiUIeFP_FL4_u1hD18vh","ii":"EDtH1M06Na4Yf2_AoF-R8aY2izx3aVWsmmRNoLrWA-Gh",'
+               b'"dt":"2024-08-02T16:31:14.978528+00:00","et":"vcp","bt":"0","b":[],"c":["NB"]}}')
+
+        # no end point auths
+        assert sum(1 for _, _ in hby.db.eans.getItemIter()) == 0
+
+        # no replys
+        assert sum(1 for _, _ in hby.db.rpys.getItemIter()) == 0
+
+        serder = serdering.SerderKERI(raw=raw)
+        # previous reply
+        # hby.db.rpys.put(keys=('EPMkaFdIE8BfaKMImFdC63ddKsrzGzg8UDsRwuneAOY_',), val=serder)
+        hby.db.eans.pin(keys=("aid1", "role1", "eid1"), val=coring.Saider(sad=serder.sad))
+        assert sum(1 for _, _ in hby.db.eans.getItemIter()) == 1
+
+        parser = multicommand.create_parser(commands)
+        args = parser.parse_args(["nord-fix", "--name", "nord", "--force"])
+        assert args.handler is not None
+        doers = args.handler(args)
+
+        directing.runController(doers=doers)
+
+    with existing.existingHby("nord") as hby:
+        assert sum(1 for _, _ in hby.db.eans.getItemIter()) == 0
+        assert sum(1 for _, _ in hby.db.rpys.getItemIter()) == 0

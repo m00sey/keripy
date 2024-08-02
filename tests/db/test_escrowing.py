@@ -59,6 +59,7 @@ def test_broker_nontrans():
         aid = "EBWY7LU2xwp0d4IhCvz1etbuv2iwcgBEigKJWnd-0Whs"
 
         serder = serdering.SerderKERI(sad=ked)
+        print(serder.raw)
         rrsr = viring.RegStateRecord._fromdict(ked["a"])  # reply RegStateRecord
         #tserder = serdering.SerderKERI(sad=ked["a"])
 
